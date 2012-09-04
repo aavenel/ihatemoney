@@ -7,10 +7,10 @@ from flask_babel import lazy_gettext as _
 from flask import request
 
 from wtforms.widgets import html_params
-from models import Project, Person
+from models import db, Project, Person, Tag
 from datetime import datetime
 from jinja2 import Markup
-from utils import slugify
+from utils import slugify, extract_tags
 
 def get_billform_for(project, set_default=True, **kwargs):
     """Return an instance of BillForm configured for a particular project.
@@ -114,6 +114,13 @@ class BillForm(FlaskForm):
         bill.date = self.date.data
         bill.owers = [Person.query.get(ower, project)
             for ower in self.payed_for.data]
+        #Parse description field to extract tags :
+        list_tags = extract_tags(self.what.data)
+        for tag in list_tags:
+            if Tag.query.filter_by(name=tag).first() is None:
+                db.session.add(Tag(tag))
+        bill.tags = [Tag.query.filter_by(name=tag).first()
+            for tag in list_tags]
 
         return bill
 

@@ -1,0 +1,31 @@
+{% extends "sidebar_table_layout.html" %}
+
+{% block sidebar %}
+    <div id="table_overflow">
+    <table class="balance table">
+    {% set balance = g.project.balance %}
+    {% for member in g.project.members | sort(attribute='name') if member.activated or balance[member.id]|round(2) != 0 %}
+    <tr id="bal-member-{{ member.id }}" action={% if member.activated %}delete{% else %}reactivate{% endif %}>
+        <td class="balance-name">{{ member.name }}</td>
+        <td class="balance-value {% if balance[member.id]|round(2) > 0 %}positive{% elif balance[member.id]|round(2) < 0 %}negative{% endif %}">
+            {% if balance[member.id]|round(2) > 0 %}+{% endif %}{{ "%.2f" | format(balance[member.id]) }}
+        </td>
+    </tr>
+    {% endfor %}
+    </table>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+<h2>{{ _("Tags") }}</h2>
+
+Did you know ? You can categorize bills by adding #hashtags in the description field of your bills.
+
+<div class="progress">
+{% for tag in tags %}
+  <div class="progress-bar" role="progressbar" style="width: 15% ; background-color: #{{ range(1, 999999) |random() }}" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100" >{{tag.name}}</div>
+{% endfor %}
+</div>
+
+{% endblock %}

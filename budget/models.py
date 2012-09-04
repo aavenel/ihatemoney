@@ -217,6 +217,11 @@ billowers = db.Table('billowers',
     db.Column('person_id', db.Integer, db.ForeignKey('person.id')),
 )
 
+tags = db.Table('tags',
+    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id')),
+    db.Column('bill_id', db.Integer, db.ForeignKey('bill.id'))
+)
+
 
 class Bill(db.Model):
 
@@ -251,6 +256,8 @@ class Bill(db.Model):
     date = db.Column(db.Date, default=datetime.now)
     what = db.Column(db.UnicodeText)
 
+    tags = db.relationship('Tag', secondary=tags, backref=db.backref('bills', lazy='dynamic'))
+
     archive = db.Column(db.Integer, db.ForeignKey("archive.id"))
 
     def pay_each(self):
@@ -265,6 +272,15 @@ class Bill(db.Model):
         return "<Bill of %s from %s for %s>" % (self.amount,
                 self.payer, ", ".join([o.name for o in self.owers]))
 
+class Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.UnicodeText)
+
+    def __init__(self, name):
+        self.name = unicode(name)
+
+    def __repr__(self):
+        return "<Tag %s>" % (self.name)
 
 class Archive(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -280,4 +296,4 @@ class Archive(db.Model):
         pass
 
     def __repr__(self):
-        return "<Archive>"
+        return "<Archive %s>" % (self.name)

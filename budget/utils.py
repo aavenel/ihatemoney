@@ -7,6 +7,7 @@ from jinja2 import filters
 from json import dumps
 from flask import redirect
 from werkzeug.routing import HTTPException, RoutingException
+from string import punctuation
 import six
 
 import csv
@@ -25,6 +26,10 @@ def slugify(value):
             value = value.encode('ascii', 'ignore')
     value = six.text_type(re.sub('[^\w\s-]', '', value).strip().lower())
     return re.sub('[-\s]+', '-', value)
+
+def extract_tags(field):
+    """Extract all #tags in a string"""
+    return set([tag.strip(punctuation).strip('#') for tag in field.split() if tag.startswith('#')])
 
 class Redirect303(HTTPException, RoutingException):
     """Raise if the map requests a redirect. This is for example the case if

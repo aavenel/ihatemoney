@@ -19,7 +19,7 @@ from sqlalchemy import orm
 from functools import wraps
 
 # local modules
-from models import db, Project, Person, Bill
+from models import db, Project, Person, Bill, Tag
 from forms import AdminAuthenticationForm, AuthenticationForm, EditProjectForm, \
     InviteForm, MemberForm, PasswordReminder, ProjectForm, get_billform_for, \
     ExportForm
@@ -492,3 +492,7 @@ def settle_bill():
 @main.route("/dashboard")
 def dashboard():
     return render_template("dashboard.html", projects=Project.query.all())
+
+@main.route("/<project_id>/summary")
+def project_summary():
+    return render_template("project_summary.html", tags=Tag.query.all())
