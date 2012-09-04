@@ -53,6 +53,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><strong>{{ g.project.name }}</strong> {{ _("options") }} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><a href="{{ url_for(".edit_project") }}">{{ _("Project settings") }}</a></li>
+                        <li><a href="{{ url_for(".project_dashboard") }}">{{ _("Project dashboard") }}</a></li>
                         <li class="divider"></li>
                         {% for id, name in session['projects'] %}
                         {% if id != g.project.id %}

@@ -15,6 +15,7 @@ from flask import session
 
 import run
 import models
+import utils
 
 
 class TestCase(unittest.TestCase):
@@ -624,6 +625,15 @@ class BudgetTestCase(TestCase):
             self.assertNotEqual(0.0, rounded_amount,
                                 msg='%f is equal to zero after rounding' % t['amount'])
 
+    def test_project_dashboard(self):
+        self.post_project("raclette")
+        response = self.app.get("/raclette/dashboard")
+        self.assertEqual(response.status_code, 200)
+
+    def test_extract_tags(self):
+        field = "Description with #tags. #plouf, #python"
+        response = set(["tags", "plouf", "python"])
+        self.assertEqual(response, utils.extract_tags(field))
 
 class APITestCase(TestCase):
     """Tests the API"""

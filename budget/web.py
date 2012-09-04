@@ -18,7 +18,7 @@ import werkzeug
 from sqlalchemy import orm
 
 # local modules
-from models import db, Project, Person, Bill
+from models import db, Project, Person, Bill, Tag
 from forms import AuthenticationForm, CreateArchiveForm, EditProjectForm, \
     InviteForm, MemberForm, PasswordReminder, ProjectForm, get_billform_for
 from utils import Redirect303
@@ -431,3 +431,7 @@ def create_archive():
 @main.route("/dashboard")
 def dashboard():
     return render_template("dashboard.html", projects=Project.query.all())
+
+@main.route("/<project_id>/dashboard")
+def project_dashboard():
+    return render_template("project_dashboard.html", tags=Tag.query.all())
