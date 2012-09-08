@@ -423,6 +423,7 @@ def create_archive():
     if request.method == "POST":
         if form.validate():
             pass
+            #TODO ?
             flash(_("The data from XX to XX has been archived"))
 
     return render_template("create_archive.html", form=form)
