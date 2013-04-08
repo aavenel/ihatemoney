@@ -187,6 +187,7 @@ tr.payer_line .balance-name{
 
 .flash {
     position: absolute;
+    padding: 8px 14px 8px 14px;
 }
 
 .modal-body {

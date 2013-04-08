@@ -13,7 +13,7 @@
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function(){
             var left = window.innerWidth/2-$('.flash').width()/2;
-            $(".flash").css({ "left": left+"px", "top":"45px" });
+            $(".flash").css({ "left": left+"px"});
             setTimeout(function(){
                 $(".flash").fadeOut("slow", function () {
                     $(".flash").remove();
@@ -75,14 +75,13 @@
 <div class="container-fluid">
     {% block sidebar %}{% endblock %}
     <div class="content">
+        {% for message in get_flashed_messages() %}
+            <div class="flash alert alert-success">{{ message }}</div>
+        {% endfor %}
     {% block content %}{% endblock %}
     </div>
 </div>
 {% endblock %}
-
-{% for message in get_flashed_messages() %}
-<div class="flash alert alert-success"><p>{{ message }}</p></div>
-{% endfor %}
 
 {% block footer %}
 <div id="footer">
