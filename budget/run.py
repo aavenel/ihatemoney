@@ -4,6 +4,7 @@ import warnings
 from flask import Flask, g, request, session
 from flask_babel import Babel
 from flask_migrate import Migrate, upgrade, stamp
+from flask_wtf.csrf import CSRFProtect
 from raven.contrib.flask import Sentry
 
 from web import main, db, mail
@@ -13,6 +14,7 @@ from utils import minimal_round
 
 
 app = Flask(__name__)
+csrf = CSRFProtect(app)
 
 
 def pre_alembic_db():

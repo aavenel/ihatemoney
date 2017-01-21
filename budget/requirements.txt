@@ -1,5 +1,5 @@
 flask>=0.9
-flask-wtf==0.8
+flask-wtf
 flask-sqlalchemy
 flask-mail>=0.8
 Flask-Migrate==1.8.0

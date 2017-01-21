@@ -1,6 +1,8 @@
-from flask_wtf import DateField, DecimalField, Email, Form, PasswordField, \
-    Required, SelectField, SelectMultipleField, SubmitField, TextAreaField, \
+from wtforms import DateField, DecimalField, PasswordField, \
+    SelectField, SelectMultipleField, SubmitField, TextAreaField, \
     TextField, ValidationError
+from wtforms.validators import InputRequired, Email
+from flask_wtf import FlaskForm
 from flask_babel import lazy_gettext as _
 from flask import request
 
@@ -57,10 +59,10 @@ class CommaDecimalField(DecimalField):
         return super(CommaDecimalField, self).process_formdata(value)
 
 
-class EditProjectForm(Form):
-    name = TextField(_("Project name"), validators=[Required()])
-    password = TextField(_("Private code"), validators=[Required()])
-    contact_email = TextField(_("Email"), validators=[Required(), Email()])
+class EditProjectForm(FlaskForm):
+    name = TextField(_("Project name"), validators=[InputRequired()])
+    password = TextField(_("Private code"), validators=[InputRequired()])
+    contact_email = TextField(_("Email"), validators=[InputRequired(), Email()])
 
     def save(self):
         """Create a new project with the information given by this form.
@@ -82,8 +84,8 @@ class EditProjectForm(Form):
 
 
 class ProjectForm(EditProjectForm):
-    id = TextField(_("Project identifier"), validators=[Required()])
-    password = PasswordField(_("Private code"), validators=[Required()])
+    id = TextField(_("Project identifier"), validators=[InputRequired()])
+    password = PasswordField(_("Private code"), validators=[InputRequired()])
     submit = SubmitField(_("Create the project"))
 
     def validate_id(form, field):
@@ -97,14 +99,14 @@ class ProjectForm(EditProjectForm):
                 "that you will be able to remember.")))
 
 
-class AuthenticationForm(Form):
-    id = TextField(_("Project identifier"), validators=[Required()])
-    password = PasswordField(_("Private code"), validators=[Required()])
+class AuthenticationForm(FlaskForm):
+    id = TextField(_("Project identifier"), validators=[InputRequired()])
+    password = PasswordField(_("Private code"), validators=[InputRequired()])
     submit = SubmitField(_("Get in"))
 
 
-class PasswordReminder(Form):
-    id = TextField(_("Project identifier"), validators=[Required()])
+class PasswordReminder(FlaskForm):
+    id = TextField(_("Project identifier"), validators=[InputRequired()])
     submit = SubmitField(_("Send me the code by email"))
 
     def validate_id(form, field):
@@ -112,13 +114,13 @@ class PasswordReminder(Form):
             raise ValidationError(_("This project does not exists"))
 
 
-class BillForm(Form):
-    date = DateField(_("Date"), validators=[Required()], default=datetime.now)
-    what = TextField(_("What?"), validators=[Required()])
-    payer = SelectField(_("Payer"), validators=[Required()], coerce=int)
-    amount = CommaDecimalField(_("Amount paid"), validators=[Required()])
+class BillForm(FlaskForm):
+    date = DateField(_("Date"), validators=[InputRequired()], default=datetime.now)
+    what = TextField(_("What?"), validators=[InputRequired()])
+    payer = SelectField(_("Payer"), validators=[InputRequired()], coerce=int)
+    amount = CommaDecimalField(_("Amount paid"), validators=[InputRequired()])
     payed_for = SelectMultipleField(_("For whom?"),
-            validators=[Required()], widget=select_multi_checkbox, coerce=int)
+            validators=[InputRequired()], widget=select_multi_checkbox, coerce=int)
     submit = SubmitField(_("Submit"))
     submit2 = SubmitField(_("Submit and add a new one"))
 
@@ -147,9 +149,9 @@ class BillForm(Form):
             raise ValidationError(_("Bills can't be null"))
 
 
-class MemberForm(Form):
+class MemberForm(FlaskForm):
 
-    name = TextField(_("Name"), validators=[Required()])
+    name = TextField(_("Name"), validators=[InputRequired()])
     weight = CommaDecimalField(_("Weight"), default=1)
     submit = SubmitField(_("Add"))
 
@@ -180,7 +182,7 @@ class MemberForm(Form):
         self.weight.data = member.weight
 
 
-class InviteForm(Form):
+class InviteForm(FlaskForm):
     emails = TextAreaField(_("People to notify"))
     submit = SubmitField(_("Send invites"))
 
@@ -192,7 +194,7 @@ class InviteForm(Form):
                     email=email))
 
 
-class CreateArchiveForm(Form):
+class CreateArchiveForm(FlaskForm):
     name = TextField(_("Name for this archive (optional)"), validators=[])
-    start_date = DateField(_("Start date"), validators=[Required()])
-    end_date = DateField(_("End date"), validators=[Required()], default=datetime.now)
+    start_date = DateField(_("Start date"), validators=[InputRequired()])
+    end_date = DateField(_("End date"), validators=[InputRequired()], default=datetime.now)
